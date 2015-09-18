@@ -15,14 +15,18 @@ export class Todos {
    }
 
    activate(params) {
-      this.toDoSvc.getAll().then(result => {
-         _.forEach(result, item => {
-            var newTodoItem = new t.TodoItem(item.description, item.id, item.isComplete);
-            this.items.push(newTodoItem);
-            Object["observe"](newTodoItem, (ev) => this.onItemChanged(ev), ["update"]);
+      if (this.items.length < 1) {
+         this.toDoSvc.getAll().then(result => {
+            _.forEach(result, item => {
+               var newTodoItem = new t.TodoItem(item.description, item.id, item.isComplete);
+               this.items.push(newTodoItem);
+               Object["observe"](newTodoItem, (ev) => this.onItemChanged(ev), ["update"]);
+            });
+            this.updateFilteredItems(params.filter);
          });
-      });
-      this.updateFilteredItems(params.filter);
+      } else {
+         this.updateFilteredItems(params.filter);   
+      }
    }
 
    addNewTodo(title = this.newTodoTitle) {

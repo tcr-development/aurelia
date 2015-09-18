@@ -27,6 +27,8 @@ Aurelia.Web/services/*.js
 Aurelia.Web/services/*.js.map
 Aurelia.Web/views/*.js
 Aurelia.Web/views/*.js.map
+Aurelia.Web/views/about/*.js
+Aurelia.Web/views/about/*.js.map
 
 # Visual Studo 2015 cache/options directory
 .vs/
