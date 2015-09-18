@@ -23,6 +23,8 @@ bld/
 [Oo]bj/
 
 # Js and map files produced from ts files
+services/*.js
+services/*.js.map
 views/*.js
 views/*.js.map
 
