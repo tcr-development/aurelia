@@ -22,6 +22,10 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+# Js and map files produced from ts files
+views/*.js
+views/*.js.map
+
 # Visual Studo 2015 cache/options directory
 .vs/
 
