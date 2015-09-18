@@ -13,12 +13,11 @@ define(["require", "exports", "./todo-item", "underscore", "../services/todoServ
             this.filter = filter;
             this.newTodoTitle = newTodoTitle;
             this.areAllChecked = areAllChecked;
-            this.load();
+            //this.load();
         }
         Todos.prototype.activate = function (params) {
             var _this = this;
             this.toDoSvc.getAll().then(function (result) {
-                var count = result.length;
                 _.forEach(result, function (item) {
                     var newTodoItem = new t.TodoItem(item.description);
                     newTodoItem.isCompleted = item.isComplete;
