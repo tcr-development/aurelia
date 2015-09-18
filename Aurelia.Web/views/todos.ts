@@ -21,9 +21,9 @@ export class Todos {
    activate(params) {
       this.toDoSvc.getAll().then(result => {
          _.forEach(result, item => {
-            var newTodoItem = new t.TodoItem(item.description);
-            newTodoItem.isCompleted = item.isComplete;
+            var newTodoItem = new t.TodoItem(item.description, item.id, item.isComplete);
             this.items.push(newTodoItem);
+            Object["observe"](newTodoItem, (ev) => this.onItemChanged(ev), ["update"]);
          });
       });
       this.updateFilteredItems(params.filter);
@@ -35,30 +35,13 @@ export class Todos {
       title = title.trim();
       if (title.length === 0) return;
 
-      var newTodoItem = new t.TodoItem(title);
-      Object["observe"](newTodoItem, (ev) => this.onItemChanged(ev));
-
-      this.items.push(newTodoItem);
-      this.newTodoTitle = null;
-      this.updateFilteredItems(this.filter);
-      this.save();
-   }
-
-   onItemChanged(ev) {
-      var todoItem = ev[0].object;
-      if (todoItem.title === "") {
-         this.deleteTodo(todoItem);
-      }
-
-      this.areAllChecked = _(this.items).all(i => i.isCompleted);
-      this.updateFilteredItems(this.filter);
-      this.save();
-   }
-
-   deleteTodo(todoItem) {
-      this.items = _(this.items).without(todoItem);
-      this.updateFilteredItems(this.filter);
-      this.save();
+      this.toDoSvc.create({ id: -1, description: title, isComplete: false }).then(result => {
+         var newTodoItem = new t.TodoItem(result.description, result.id, result.isComplete);
+         this.items.push(newTodoItem);
+         Object["observe"](newTodoItem, (ev) => this.onItemChanged(ev));
+         this.newTodoTitle = null;
+         this.updateFilteredItems(this.filter);
+      });
    }
 
    areAllCheckedChanged() {
@@ -70,7 +53,32 @@ export class Todos {
       this.items = _(this.items).filter(i => !i.isCompleted);
       this.areAllChecked = false;
       this.updateFilteredItems(this.filter);
-      this.save();
+      //this.save();
+   }
+
+   deleteTodo(todoItem) {
+      this.toDoSvc.delete(todoItem.id).then(() => {
+         this.items = _(this.items).without(todoItem);
+         this.updateFilteredItems(this.filter);
+      });
+      //this.save();
+   }
+
+   onItemChanged(ev) {
+      if (ev[0].name !== "description" && ev[0].name !== "isCompleted") {
+         return;
+      }
+      var todoItem = <t.TodoItem>ev[0].object;
+      if (todoItem.description === "") {
+         this.deleteTodo(todoItem);
+         return;
+      }
+
+      this.toDoSvc.update({id: todoItem.id, description: todoItem.description, isComplete: todoItem.isCompleted}).then(() => {
+         this.areAllChecked = _(this.items).all(i => i.isCompleted);
+         this.updateFilteredItems(this.filter);
+      });
+      //this.save();
    }
 
    get countTodosLeft() {
@@ -93,29 +101,29 @@ export class Todos {
       }
    }
 
-   load() {
-      var storageContent = localStorage.getItem(STORAGE_NAME);
-      if (storageContent == undefined) return;
+   //load() {
+   //   var storageContent = localStorage.getItem(STORAGE_NAME);
+   //   if (storageContent == undefined) return;
 
-      var simpleItems = JSON.parse(storageContent);
-      this.items = _.map(simpleItems, (item: { title: string; completed: boolean }) => {
-         var todoItem = new t.TodoItem(item.title);
-         todoItem.isCompleted = item.completed;
+   //   var simpleItems = JSON.parse(storageContent);
+   //   this.items = _.map(simpleItems, (item: { title: string; completed: boolean }) => {
+   //      var todoItem = new t.TodoItem(item.title);
+   //      todoItem.isCompleted = item.completed;
 
-         Object["observe"](todoItem, (ev) => this.onItemChanged(ev));
+   //      Object["observe"](todoItem, (ev) => this.onItemChanged(ev));
 
-         return todoItem;
-      });
-   }
+   //      return todoItem;
+   //   });
+   //}
 
-   save() {
-      var simpleItems = _.map(this.items, item => {
-         return {
-            title: item.title,
-            completed: item.isCompleted
-         }
-      });
+   //save() {
+   //   var simpleItems = _.map(this.items, item => {
+   //      return {
+   //         title: item.title,
+   //         completed: item.isCompleted
+   //      }
+   //   });
 
-      localStorage.setItem(STORAGE_NAME, JSON.stringify(simpleItems));
-   }
+   //   localStorage.setItem(STORAGE_NAME, JSON.stringify(simpleItems));
+   //}
 }
