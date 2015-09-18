@@ -9,18 +9,17 @@ export class Todos {
 
    constructor(
       private toDoSvc: service.ToDoService,
-      public items = [],
-      public filteredItems = [],
+      public items: t.TodoItem[] = [],
+      public filteredItems: t.TodoItem[] = [],
       public filter = "",
       public newTodoTitle = null,
       public areAllChecked = false) {
 
-      this.load();
+      //this.load();
    }
 
    activate(params) {
       this.toDoSvc.getAll().then(result => {
-         var count = result.length;
          _.forEach(result, item => {
             var newTodoItem = new t.TodoItem(item.description);
             newTodoItem.isCompleted = item.isComplete;

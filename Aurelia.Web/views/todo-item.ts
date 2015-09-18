@@ -5,7 +5,7 @@ export class TodoItem {
       public isCompleted = false,
       public isEditing = false,
       public lastLabelClick = 0,
-      public editTitle = null) {
+      public editTitle:string = null) {
 
       this.title = this.title.trim();
    }
@@ -28,7 +28,7 @@ export class TodoItem {
    }
 
    onKeyUp(ev) {
-      if (ev.keyCode == ESC_KEY) {
+      if (ev.keyCode === ESC_KEY) {
          this.editTitle = this.title;
          this.isEditing = false;
       }
