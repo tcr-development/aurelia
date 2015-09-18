@@ -27,7 +27,7 @@ define(["require", "exports"], function (require, exports) {
             this.isEditing = false;
         };
         TodoItem.prototype.onKeyUp = function (ev) {
-            if (ev.keyCode == ESC_KEY) {
+            if (ev.keyCode === ESC_KEY) {
                 this.editTitle = this.title;
                 this.isEditing = false;
             }
