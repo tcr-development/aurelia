@@ -23,10 +23,10 @@ bld/
 [Oo]bj/
 
 # Js and map files produced from ts files
-services/*.js
-services/*.js.map
-views/*.js
-views/*.js.map
+Aurelia.Web/services/*.js
+Aurelia.Web/services/*.js.map
+Aurelia.Web/views/*.js
+Aurelia.Web/views/*.js.map
 
 # Visual Studo 2015 cache/options directory
 .vs/
