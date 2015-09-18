@@ -1,13 +1,15 @@
 ﻿var ESC_KEY = 27;
 
 export class TodoItem {
-   constructor(public title: string,
+   constructor(
+      public description: string,
+      public id: number = -1,
       public isCompleted = false,
       public isEditing = false,
       public lastLabelClick = 0,
       public editTitle:string = null) {
 
-      this.title = this.title.trim();
+      this.description = this.description.trim();
    }
 
    labelClicked() {
@@ -15,7 +17,7 @@ export class TodoItem {
       var duration = now - this.lastLabelClick;
 
       if (duration < 350) {
-         this.editTitle = this.title;
+         this.editTitle = this.description;
          this.isEditing = true;
       }
 
@@ -23,13 +25,13 @@ export class TodoItem {
    }
 
    finishEditing() {
-      this.title = this.editTitle.trim();
+      this.description = this.editTitle.trim();
       this.isEditing = false;
    }
 
    onKeyUp(ev) {
       if (ev.keyCode === ESC_KEY) {
-         this.editTitle = this.title;
+         this.editTitle = this.description;
          this.isEditing = false;
       }
    }
