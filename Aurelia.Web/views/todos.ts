@@ -2,8 +2,6 @@
 import _ = require("underscore");
 import service = require("../services/todoService");
 
-var STORAGE_NAME = "todomvc-aurelia";
-
 export class Todos {
    static inject = [service.ToDoService];
 
@@ -14,8 +12,6 @@ export class Todos {
       public filter = "",
       public newTodoTitle = null,
       public areAllChecked = false) {
-
-      //this.load();
    }
 
    activate(params) {
@@ -61,7 +57,6 @@ export class Todos {
          this.items = _(this.items).without(todoItem);
          this.updateFilteredItems(this.filter);
       });
-      //this.save();
    }
 
    onItemChanged(ev) {
@@ -78,7 +73,6 @@ export class Todos {
          this.areAllChecked = _(this.items).all(i => i.isCompleted);
          this.updateFilteredItems(this.filter);
       });
-      //this.save();
    }
 
    get countTodosLeft() {
@@ -101,29 +95,4 @@ export class Todos {
       }
    }
 
-   //load() {
-   //   var storageContent = localStorage.getItem(STORAGE_NAME);
-   //   if (storageContent == undefined) return;
-
-   //   var simpleItems = JSON.parse(storageContent);
-   //   this.items = _.map(simpleItems, (item: { title: string; completed: boolean }) => {
-   //      var todoItem = new t.TodoItem(item.title);
-   //      todoItem.isCompleted = item.completed;
-
-   //      Object["observe"](todoItem, (ev) => this.onItemChanged(ev));
-
-   //      return todoItem;
-   //   });
-   //}
-
-   //save() {
-   //   var simpleItems = _.map(this.items, item => {
-   //      return {
-   //         title: item.title,
-   //         completed: item.isCompleted
-   //      }
-   //   });
-
-   //   localStorage.setItem(STORAGE_NAME, JSON.stringify(simpleItems));
-   //}
 }
